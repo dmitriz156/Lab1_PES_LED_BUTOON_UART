@@ -45,7 +45,6 @@
 
 /* USER CODE BEGIN PV */
 
-uint8_t count = 0;					//к-ть натискать
 uint8_t btn_state = 0;              //Cтан кнопки
 uint8_t btn_cur  = 0;				//поточне значення кнопки
 uint8_t btn_prev = 0; 				//попереднє значення кнопки
@@ -152,8 +151,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 15;
-  RCC_OscInitStruct.PLL.PLLN = 216;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
