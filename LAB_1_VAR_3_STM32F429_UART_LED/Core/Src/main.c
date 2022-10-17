@@ -68,8 +68,18 @@ uint8_t btn_state = 0;              //Cтан кнопки
 uint8_t btn_cur  = 0;				//поточне значення кнопки
 uint8_t btn_prev = 0; 				//попереднє значення кнопки
 
+<<<<<<< HEAD
 
 uint8_t tipe_str = 0;
+=======
+/*volatile uint8_t counter = 0;		  //рахівник на колбеці У�?РТ
+volatile uint8_t buff[16] = { 0, };   //буфер дл�? збереженн�? введеної інформації value
+volatile uint8_t value = 0;	          //змінна в котру запи�?ують байт інформаціїї з терміналу
+volatile uint8_t flag = 0;            //флаг дл від�?лідковуванн�? введенн�? команд в термінал
+
+int str[255] = { 0, };				  //ма�?ив де зберігають�?�? введені дані з ьерміналу*/
+uint8_t FF = 0;
+>>>>>>> Work_with_UART
 
 uint8_t buff[R_BUFF_LEN];
 uart_ring_buff_t uart_ring;
@@ -103,10 +113,20 @@ uint8_t ring_get_message(uart_ring_buff_t * uart_ring, uint8_t * string);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+<<<<<<< HEAD
 //	uint32_t delayms = 100;
 	uint8_t tstring[255];
 	uint8_t rstring[R_BUFF_LEN + 1];
 	char string[8];
+=======
+	uint32_t delayms = 100;
+	uint8_t tstring[255];
+	uint8_t rstring[R_BUFF_LEN + 1];
+	char string[7] = "BLINK";
+
+	//volatile uint16_t temprt;
+	//volatile uint16_t voltag;
+>>>>>>> Work_with_UART
 
   /* USER CODE END 1 */
 
@@ -133,9 +153,18 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   ring_init(&uart_ring, buff, sizeof(buff) / sizeof(buff[0]) ); // Initialize UART receiver ring buffer.
+<<<<<<< HEAD
   sprintf((char*)tstring,"UART IT Enter command 'T MCU','V REF' or 'ALL SENS' ('t mcu','v ref','all sens')\r\n");
   HAL_UART_Transmit_IT(&huart3,tstring,strlen((char*)tstring));
   HAL_UART_Receive_IT(&huart3,uart_ring.buffer,1);						 // Start UART receiver in the non blocking mode
+=======
+  sprintf((char*)tstring,"UART IT Enter command 'T MCU','V REF' or 'ALL SENS'\r\n");
+  HAL_UART_Transmit_IT(&huart3,tstring,strlen((char*)tstring));
+  HAL_UART_Receive_IT(&huart3,uart_ring.buffer,1);						 // Start UART receiver in the non blocking mode
+  //setvbuf(stdin, NULL, _IONBF, 0); // определение нулевого буфера
+  //HAL_UART_Receive_IT(&huart3, &value, 1); //запу�?каем UART по прерыванию
+  //printf("PRINT SOMETHING!\r\n");
+>>>>>>> Work_with_UART
 
   /* USER CODE END 2 */
 
@@ -148,6 +177,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 	  //btn_cur = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+<<<<<<< HEAD
 	  HAL_ADCEx_InjectedStart(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, 100);
 	  temprt = (HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)/40);
@@ -177,6 +207,27 @@ int main(void)
 			  sprintf((char*)tstring,"Incorrect command Echo: %s\n" "Enter the correct command 'T MCU','V REF' or 'ALL SENS' ('t mcu','v ref','all sens')\r\n",rstring);
 		  }
 
+=======
+	  if(!strcmp(string,"T MCU"))
+	  {
+		  HAL_ADCEx_InjectedStart(&hadc1);
+		  HAL_ADC_PollForConversion(&hadc1, 100);
+		  temprt = (HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)/40);
+		  voltag = ((float)HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)*3/4096);
+		  HAL_ADCEx_InjectedStop(&hadc1);
+
+		  sprintf((char*)tstring,"T MCU = %d C\r\n",temprt, rstring);
+		  //printf("T MCU = %d C\r\n",temprt);
+	  }
+
+	  if (ring_get_message(&uart_ring, rstring))
+	  {
+
+		  sscanf((char*)rstring,"%25[TMCUVREFALSNtmcuvrefalsn ]", string);
+		  // Transmit (in non blocking mode) back to the UART the last entered line and prompt for the next input
+		  sprintf((char*)tstring,"Echo: %s\n"
+				  "Enter command 'T MCU','V REF' or 'ALL SENS'\r\n",rstring);
+>>>>>>> Work_with_UART
 		  HAL_UART_Transmit_IT(&huart3,tstring,strlen((char*)tstring));
 	  }
 
