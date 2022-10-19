@@ -74,7 +74,7 @@ uint8_t tipe_str = 0;
 uint8_t buff[R_BUFF_LEN];
 uart_ring_buff_t uart_ring;
 
-uint16_t temprt;
+float temprt;
 float voltag;
 
 /* USER CODE END PV */
@@ -150,7 +150,9 @@ int main(void)
 	  //btn_cur = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 	  HAL_ADCEx_InjectedStart(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, 100);
-	  temprt = (HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)/40);
+	  //temprt = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
+	  //Temperature (in °C) = {(VSENSE – V25) / Avg_Slope} + 25
+	  temprt = ((3.3*HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)/4095-0.76)/0.0025)+25;
 	  voltag = ((float)HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)*3/4096);
 	  HAL_ADCEx_InjectedStop(&hadc1);
 
@@ -160,7 +162,7 @@ int main(void)
 
 		  if(!strcmp(string,"T MCU") || !strcmp(string,"t mcu"))
 		  {
-			  sprintf((char*)tstring,"T MCU = %d C\r\n",temprt);
+			  sprintf((char*)tstring,"T MCU = %d C\r\n",(uint16_t)temprt);
 		  }
 		  else if(!strcmp(string,"V REF") || !strcmp(string,"v ref"))
 		  {
@@ -168,7 +170,7 @@ int main(void)
 		  }
 		  else if(!strcmp(string,"ALL SENS") || !strcmp(string,"all sens"))
 		  {
-			  sprintf((char*)tstring,"T MCU = %d C\r\n" "V REF = %.2f V\r\n",temprt,voltag);
+			  sprintf((char*)tstring,"T MCU = %d C\r\n" "V REF = %.2f V\r\n",(uint16_t)temprt,voltag);
 			  //sprintf((char*)tstring,"V REF = %.2f C\r\n",voltag);
 		  }
 		  else
